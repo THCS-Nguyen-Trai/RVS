@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Dịch và Đảo ngược Văn bản</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      padding: 30px;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+    }
+    textarea {
+      width: 80%;
+      height: 100px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .output {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #222;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dịch tiếng Việt sang tiếng Anh và đảo ngược</h1>
+  <textarea id="inputText" placeholder="Nhập văn bản tiếng Việt ở đây..."></textarea><br>
+  <button onclick="processText()">Chuyển đổi</button>
+  <div class="output" id="outputText"></div>
+
+  <script>
+    async function translateText(text) {
+      const response = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=vi|en');
+      const data = await response.json();
+      return data.responseData.translatedText;
+    }
+
+    function reverseEachWord(text) {
+      return text.split(' ').map(word => word.split('').reverse().join('')).join(' ');
+    }
+
+    function reverseWordOrder(text) {
+      return text.split(' ').reverse().join(' ');
+    }
+
+    async function processText() {
+      const input = document.getElementById("inputText").value;
+      const translated = await translateText(input);
+      const reversedWords = reverseEachWord(translated);
+      const finalResult = reverseWordOrder(reversedWords);
+      document.getElementById("outputText").textContent = finalResult;
+    }
+  </script>
+</body>
+</html>
